@@ -1,0 +1,32 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: quarkus-hello-build-trigger-template
+  labels:
+    app: quarkus-hello
+spec:
+  params:
+    - name: git-repository-url
+      default: "https://github.com/stephennimmo/quarkus-hello.git"
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1
+      kind: PipelineRun
+      metadata:
+        generateName: quarkus-hello-build-pipeline-
+      spec:
+        pipelineRef:
+          name: quarkus-hello-build-pipeline
+        params:
+          - name: git-repository-url
+            value: $(tt.params.git-repository-url)
+        workspaces:
+          - name: workspace
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 100Mi
+          - name: maven-settings
+            emptyDir: {}

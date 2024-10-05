@@ -1,0 +1,28 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: quarkus-hello-build-event-listener
+  labels:
+    app: quarkus-hello
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - name: quarkus-hello-build-trigger
+      bindings:
+        - ref: github-push
+          kind: ClusterTriggerBinding
+      interceptors:
+        - ref:
+            name: "github"
+          params:
+            - name: "secretRef"
+              value:
+                secretName: quarkus-hello-github-webhook-secret
+                secretKey: token
+            - name: "eventTypes"
+              value: [ "push" ]
+      template:
+        ref: quarkus-hello-build-trigger-template
+
+# oc create secret generic quarkus-hello-github-webhook-secret \
+#   --from-literal=token=********

@@ -1,0 +1,5 @@
+resources:
+  - quarkus-hello-build-pipeline.yml
+  - quarkus-hello-build-trigger-template.yml
+  - quarkus-hello-build-event-listener.yml
+  - quarkus-hello-build-event-listener-route.yml

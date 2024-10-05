@@ -1,0 +1,17 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: quarkus-hello-build-event-listener-route
+  labels:
+    app: quarkus-hello
+spec:
+  host: quarkus-hello-build.apps.ocp.lab.snimmo.com
+  to:
+    kind: Service
+    name: el-quarkus-hello-build-event-listener
+    weight: 100
+  port:
+    targetPort: http-listener
+  tls:
+    termination: edge
+  wildcardPolicy: None
